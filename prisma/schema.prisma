@@ -1,0 +1,116 @@
+// Super Network Administrator - Prisma Schema
+// Supports SQLite (dev) and Azure SQL / PostgreSQL (prod)
+// Switch DATABASE_URL in .env.local to change providers
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Organization ───────────────────────────────────────────────
+// One record per deployment. Stores tenant config from setup wizard.
+model Organization {
+  id            String   @id @default(cuid())
+  name          String
+  tenantId      String   @unique
+  clientId      String
+  environment   String   @default("cloud") // "cloud" | "hybrid" | "onprem"
+  setupComplete Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  modules  OrgModule[]
+  services OrgService[]
+}
+
+// ─── OrgModule ──────────────────────────────────────────────────
+// Tracks which dashboard modules are enabled for this org.
+model OrgModule {
+  id             String       @id @default(cuid())
+  organizationId String
+  moduleId       String       // e.g. "entra-users", "intune-devices"
+  enabled        Boolean      @default(true)
+  position       Int          @default(0)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, moduleId])
+}
+
+// ─── OrgService ─────────────────────────────────────────────────
+// Tracks which Microsoft services this org has enabled.
+model OrgService {
+  id             String       @id @default(cuid())
+  organizationId String
+  serviceId      String       // e.g. "m365", "intune", "exchange", "teams"
+  enabled        Boolean      @default(true)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, serviceId])
+}
+
+// ─── AuditLog ───────────────────────────────────────────────────
+// Immutable audit trail of all admin actions performed in the app.
+model AuditLog {
+  id           String   @id @default(cuid())
+  action       String   // e.g. "user.create", "user.disable", "user.resetMfa"
+  targetType   String   // e.g. "user", "device", "group"
+  targetId     String?  // Object ID in Entra
+  targetName   String?  // Display name for readability
+  performedBy  String   // UPN of the admin who performed the action
+  details      String?  // JSON string of extra context
+  success      Boolean  @default(true)
+  errorMessage String?
+  createdAt    DateTime @default(now())
+}
+
+// ─── NextAuth Tables ────────────────────────────────────────────
+// Required for @auth/prisma-adapter
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
