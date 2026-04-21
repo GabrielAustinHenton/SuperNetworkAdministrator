@@ -37,7 +37,7 @@ A unified admin console for Microsoft 365, Azure AD (Entra ID), Intune, Exchange
   - `Team.ReadBasic.All`
   - `Sites.Read.All`
 
-- Redirect URI set to: `http://localhost:3000/api/auth/callback/azure-ad`
+- Redirect URI set to: `http://localhost:3001/api/auth/callback/azure-ad`
 
 ### 2. Install & configure
 
@@ -62,7 +62,7 @@ npm run db:push    # Creates SQLite DB (dev) — no server needed
 
 ```bash
 npm run dev
-# Open http://localhost:3000
+# Open http://localhost:3001
 # You'll be redirected to the setup wizard on first run
 ```
 
