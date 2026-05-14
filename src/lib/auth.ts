@@ -1,7 +1,5 @@
 import type { NextAuthOptions } from "next-auth";
 import AzureADProvider from "next-auth/providers/azure-ad";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import db from "@/lib/db";
 
 // Microsoft Graph scopes requested at login.
 // The user (an admin) must have these delegated permissions granted in Entra.
@@ -26,9 +24,6 @@ const GRAPH_SCOPES = [
 ].join(" ");
 
 export const authOptions: NextAuthOptions = {
-  // @ts-expect-error - PrismaAdapter type mismatch between next-auth and @auth/prisma-adapter
-  adapter: PrismaAdapter(db),
-
   providers: [
     AzureADProvider({
       clientId: process.env.AZURE_AD_CLIENT_ID!,
