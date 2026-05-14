@@ -24,7 +24,7 @@ export function getGraphClient(accessToken: string): Client {
 const USER_SELECT =
   "id,displayName,userPrincipalName,mail,jobTitle,department,officeLocation," +
   "mobilePhone,businessPhones,accountEnabled,createdDateTime,usageLocation," +
-  "onPremisesSyncEnabled,onPremisesLastSyncDateTime,assignedLicenses";
+  "onPremisesSyncEnabled,onPremisesLastSyncDateTime,assignedLicenses,signInActivity";
 
 export async function listUsers(
   accessToken: string,

@@ -137,9 +137,9 @@ export default function UsersPage() {
             <thead>
               <tr className="border-b bg-muted/30">
                 <th className="text-left font-medium text-muted-foreground px-4 py-3">User</th>
-                <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">Department</th>
-                <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">Last Sign-In</th>
-                <th className="text-left font-medium text-muted-foreground px-4 py-3">Status</th>
+                <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden md:table-cell w-40">Department</th>
+                <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell w-36">Last Sign-In</th>
+                <th className="text-left font-medium text-muted-foreground px-4 py-3 w-36">Status</th>
                 <th className="w-10 px-4 py-3" />
               </tr>
             </thead>
@@ -169,20 +169,20 @@ export default function UsersPage() {
                           </div>
                         </div>
                       </td>
-                      <td className="px-4 py-3 hidden md:table-cell text-muted-foreground">
+                      <td className="px-4 py-3 hidden md:table-cell text-muted-foreground w-40 text-sm">
                         {user.department ?? "—"}
                       </td>
-                      <td className="px-4 py-3 hidden lg:table-cell text-muted-foreground text-xs">
-                        {formatRelativeTime(user.lastSignInDateTime)}
+                      <td className="px-4 py-3 hidden lg:table-cell text-muted-foreground text-xs w-36">
+                        {formatRelativeTime(user.signInActivity?.lastSignInDateTime)}
                       </td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
+                      <td className="px-4 py-3 w-36">
+                        <div className="flex items-center gap-1.5">
                           <Badge variant={user.accountEnabled ? "success" : "muted"}>
                             {user.accountEnabled ? "Active" : "Disabled"}
                           </Badge>
-                          {user.onPremisesSyncEnabled && (
-                            <Badge variant="info" className="hidden sm:inline-flex">Synced</Badge>
-                          )}
+                          <Badge variant={user.onPremisesSyncEnabled ? "info" : "outline"}>
+                            {user.onPremisesSyncEnabled ? "Synced" : "Cloud"}
+                          </Badge>
                         </div>
                       </td>
                       <td className="px-4 py-3">

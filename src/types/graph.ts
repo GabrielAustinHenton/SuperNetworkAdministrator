@@ -18,6 +18,10 @@ export interface GraphUser {
   usageLocation?: string;
   onPremisesSyncEnabled?: boolean;
   onPremisesLastSyncDateTime?: string;
+  signInActivity?: {
+    lastSignInDateTime?: string;
+    lastNonInteractiveSignInDateTime?: string;
+  };
 }
 
 export interface GraphUserCreate {
