@@ -17,7 +17,6 @@ const GRAPH_SCOPES = [
   "SecurityEvents.Read.All",
   "AuditLog.Read.All",
   "Organization.Read.All",
-  "Mail.ReadBasic.All",
   "RoleManagement.Read.All",
   "Team.ReadBasic.All",
   "Sites.Read.All",
