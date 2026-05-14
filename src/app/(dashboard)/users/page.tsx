@@ -137,9 +137,10 @@ export default function UsersPage() {
             <thead>
               <tr className="border-b bg-muted/30">
                 <th className="text-left font-medium text-muted-foreground px-4 py-3">User</th>
-                <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden md:table-cell w-40">Department</th>
-                <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell w-36">Last Sign-In</th>
-                <th className="text-left font-medium text-muted-foreground px-4 py-3 w-36">Status</th>
+                <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden md:table-cell w-36">Department</th>
+                <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell w-32">Last Sign-In</th>
+                <th className="text-left font-medium text-muted-foreground px-4 py-3 w-24">Status</th>
+                <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell w-24">Source</th>
                 <th className="w-10 px-4 py-3" />
               </tr>
             </thead>
@@ -147,7 +148,7 @@ export default function UsersPage() {
               {loading
                 ? [...Array(8)].map((_, i) => (
                     <tr key={i}>
-                      <td className="px-4 py-3" colSpan={5}>
+                      <td className="px-4 py-3" colSpan={6}>
                         <div className="h-8 bg-muted/50 rounded animate-pulse" />
                       </td>
                     </tr>
@@ -169,21 +170,21 @@ export default function UsersPage() {
                           </div>
                         </div>
                       </td>
-                      <td className="px-4 py-3 hidden md:table-cell text-muted-foreground w-40 text-sm">
+                      <td className="px-4 py-3 hidden md:table-cell text-muted-foreground w-36 text-sm truncate max-w-[144px]">
                         {user.department ?? "—"}
                       </td>
-                      <td className="px-4 py-3 hidden lg:table-cell text-muted-foreground text-xs w-36">
+                      <td className="px-4 py-3 hidden lg:table-cell text-muted-foreground text-xs w-32">
                         {formatRelativeTime(user.signInActivity?.lastSignInDateTime)}
                       </td>
-                      <td className="px-4 py-3 w-36">
-                        <div className="flex items-center gap-1.5">
-                          <Badge variant={user.accountEnabled ? "success" : "muted"}>
-                            {user.accountEnabled ? "Active" : "Disabled"}
-                          </Badge>
-                          <Badge variant={user.onPremisesSyncEnabled ? "info" : "outline"}>
-                            {user.onPremisesSyncEnabled ? "Synced" : "Cloud"}
-                          </Badge>
-                        </div>
+                      <td className="px-4 py-3 w-24">
+                        <Badge variant={user.accountEnabled ? "success" : "muted"}>
+                          {user.accountEnabled ? "Active" : "Disabled"}
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-3 hidden sm:table-cell w-24">
+                        <Badge variant={user.onPremisesSyncEnabled ? "info" : "secondary"}>
+                          {user.onPremisesSyncEnabled ? "On-Prem" : "Cloud"}
+                        </Badge>
                       </td>
                       <td className="px-4 py-3">
                         <DropdownMenu>
@@ -238,7 +239,7 @@ export default function UsersPage() {
           </table>
 
           {!loading && filtered.length === 0 && (
-            <div className="p-12 text-center text-sm text-muted-foreground">
+            <div className="p-12 text-center text-sm text-muted-foreground" >
               {search ? "No users match your search." : "No users found."}
             </div>
           )}
