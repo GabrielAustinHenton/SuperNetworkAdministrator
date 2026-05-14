@@ -12,6 +12,7 @@ import {
 import {
   RefreshCw, ShieldAlert, ShieldCheck, ChevronRight,
   Clock, CheckCircle2, XCircle, Loader2, User, Monitor,
+  Wifi, Globe,
 } from "lucide-react";
 import { formatRelativeTime, formatDateTime } from "@/lib/utils";
 import type { GraphSecurityAlert } from "@/types/graph";
@@ -239,15 +240,78 @@ export default function SecurityPage() {
 
                 <Separator />
 
+                {/* Affected machines — shown first, most useful */}
+                {selected.hostStates && selected.hostStates.length > 0 && (
+                  <div>
+                    <p className="text-sm font-medium mb-2">Affected Machines</p>
+                    <div className="space-y-2">
+                      {selected.hostStates.map((h, i) => (
+                        <div key={i} className="rounded-lg border bg-muted/30 p-3 text-sm space-y-1">
+                          <div className="flex items-center gap-2 font-medium">
+                            <Monitor className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+                            {h.netBiosName || h.fqdn || "Unknown device"}
+                          </div>
+                          {h.fqdn && h.netBiosName && (
+                            <p className="text-xs text-muted-foreground pl-5">{h.fqdn}</p>
+                          )}
+                          {h.os && (
+                            <p className="text-xs text-muted-foreground pl-5">OS: {h.os}</p>
+                          )}
+                          <div className="flex items-center gap-4 pl-5">
+                            {h.privateIpAddress && (
+                              <span className="text-xs text-muted-foreground flex items-center gap-1">
+                                <Wifi className="w-3 h-3" /> {h.privateIpAddress}
+                              </span>
+                            )}
+                            {h.publicIpAddress && (
+                              <span className="text-xs text-muted-foreground flex items-center gap-1">
+                                <Globe className="w-3 h-3" /> {h.publicIpAddress}
+                              </span>
+                            )}
+                            {h.isAzureAdJoined && (
+                              <span className="text-xs text-blue-600">Entra Joined</span>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {/* Affected users */}
                 {selected.userStates && selected.userStates.length > 0 && (
                   <div>
                     <p className="text-sm font-medium mb-2">Affected Users</p>
                     <div className="space-y-1">
                       {selected.userStates.map((u, i) => (
-                        <div key={i} className="flex items-center gap-2 text-sm">
-                          <User className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
-                          <span>{u.userPrincipalName || u.accountName}</span>
+                        <div key={i} className="rounded-lg border bg-muted/30 p-3 text-sm space-y-1">
+                          <div className="flex items-center gap-2 font-medium">
+                            <User className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+                            {u.userPrincipalName || u.accountName}
+                          </div>
+                          {u.domainName && (
+                            <p className="text-xs text-muted-foreground pl-5">Domain: {u.domainName}</p>
+                          )}
+                          {u.logonIp && (
+                            <p className="text-xs text-muted-foreground pl-5">Logon IP: {u.logonIp}</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Network connections */}
+                {selected.networkConnections && selected.networkConnections.length > 0 && (
+                  <div>
+                    <p className="text-sm font-medium mb-2">Network Connections</p>
+                    <div className="space-y-1">
+                      {selected.networkConnections.slice(0, 5).map((n, i) => (
+                        <div key={i} className="text-xs text-muted-foreground font-mono bg-muted/30 rounded px-3 py-2">
+                          {n.sourceAddress && <span>{n.sourceAddress} → </span>}
+                          {n.destinationAddress}
+                          {n.destinationPort && <span>:{n.destinationPort}</span>}
+                          {n.protocol && <span className="ml-2 text-muted-foreground/60">({n.protocol})</span>}
                         </div>
                       ))}
                     </div>

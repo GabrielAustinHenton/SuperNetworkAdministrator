@@ -80,6 +80,22 @@ export interface GraphSecurityAlert {
   userStates?: {
     userPrincipalName: string;
     accountName: string;
+    domainName?: string;
+    logonIp?: string;
+  }[];
+  hostStates?: {
+    fqdn?: string;
+    netBiosName?: string;
+    os?: string;
+    publicIpAddress?: string;
+    privateIpAddress?: string;
+    isAzureAdJoined?: boolean;
+  }[];
+  networkConnections?: {
+    destinationAddress?: string;
+    destinationPort?: string;
+    sourceAddress?: string;
+    protocol?: string;
   }[];
   vendorInformation?: {
     provider: string;

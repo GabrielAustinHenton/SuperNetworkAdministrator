@@ -200,7 +200,7 @@ export async function listSecurityAlerts(
       // Fallback to v1 alerts endpoint if v2 not available
       client
         .api("/security/alerts")
-        .select("id,title,description,severity,status,category,createdDateTime,userStates,vendorInformation")
+        .select("id,title,description,severity,status,category,createdDateTime,userStates,hostStates,networkConnections,vendorInformation")
         .top(top)
         .get()
     );
