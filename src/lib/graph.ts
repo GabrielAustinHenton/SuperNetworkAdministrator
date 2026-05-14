@@ -26,18 +26,26 @@ const USER_SELECT =
   "mobilePhone,businessPhones,accountEnabled,createdDateTime,usageLocation," +
   "onPremisesSyncEnabled,onPremisesLastSyncDateTime,assignedLicenses,signInActivity";
 
-export async function listUsers(
-  accessToken: string,
-  top = 100
-): Promise<GraphUser[]> {
+export async function listUsers(accessToken: string): Promise<GraphUser[]> {
   const client = getGraphClient(accessToken);
-  const res: GraphListResponse<GraphUser> = await client
+  const users: GraphUser[] = [];
+
+  let res: GraphListResponse<GraphUser> = await client
     .api("/users")
     .select(USER_SELECT)
     .orderby("displayName")
-    .top(top)
+    .top(999)
     .get();
-  return res.value;
+
+  users.push(...res.value);
+
+  // Follow pagination links until all users are fetched
+  while (res["@odata.nextLink"]) {
+    res = await client.api(res["@odata.nextLink"]).get();
+    users.push(...res.value);
+  }
+
+  return users;
 }
 
 export async function getUser(
