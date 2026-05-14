@@ -91,6 +91,21 @@ export interface GraphSecurityAlert {
     privateIpAddress?: string;
     isAzureAdJoined?: boolean;
   }[];
+  fileStates?: {
+    name?: string;
+    path?: string;
+    riskScore?: string;
+    fileHash?: {
+      hashType?: string;
+      hashValue?: string;
+    };
+  }[];
+  processes?: {
+    name?: string;
+    path?: string;
+    commandLine?: string;
+    createdDateTime?: string;
+  }[];
   networkConnections?: {
     destinationAddress?: string;
     destinationPort?: string;

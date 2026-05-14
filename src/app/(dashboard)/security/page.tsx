@@ -12,7 +12,7 @@ import {
 import {
   RefreshCw, ShieldAlert, ShieldCheck, ChevronRight,
   Clock, CheckCircle2, XCircle, Loader2, User, Monitor,
-  Wifi, Globe,
+  Wifi, Globe, FileWarning, Terminal,
 } from "lucide-react";
 import { formatRelativeTime, formatDateTime } from "@/lib/utils";
 import type { GraphSecurityAlert } from "@/types/graph";
@@ -240,7 +240,60 @@ export default function SecurityPage() {
 
                 <Separator />
 
-                {/* Affected machines — shown first, most useful */}
+                {/* File evidence */}
+                {selected.fileStates && selected.fileStates.length > 0 && (
+                  <div>
+                    <p className="text-sm font-medium mb-2">Detected Files</p>
+                    <div className="space-y-2">
+                      {selected.fileStates.map((f, i) => (
+                        <div key={i} className="rounded-lg border bg-red-50/50 border-red-100 p-3 text-sm space-y-1">
+                          <div className="flex items-center gap-2 font-medium text-red-800">
+                            <FileWarning className="w-3.5 h-3.5 shrink-0" />
+                            {f.name || "Unknown file"}
+                          </div>
+                          {f.path && (
+                            <p className="text-xs font-mono text-muted-foreground pl-5 break-all">{f.path}</p>
+                          )}
+                          {f.riskScore && (
+                            <p className="text-xs text-muted-foreground pl-5">Risk score: {f.riskScore}</p>
+                          )}
+                          {f.fileHash?.hashValue && (
+                            <p className="text-xs font-mono text-muted-foreground pl-5 break-all">
+                              {f.fileHash.hashType}: {f.fileHash.hashValue}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Processes */}
+                {selected.processes && selected.processes.length > 0 && (
+                  <div>
+                    <p className="text-sm font-medium mb-2">Related Processes</p>
+                    <div className="space-y-2">
+                      {selected.processes.map((p, i) => (
+                        <div key={i} className="rounded-lg border bg-muted/30 p-3 text-sm space-y-1">
+                          <div className="flex items-center gap-2 font-medium">
+                            <Terminal className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+                            {p.name || "Unknown process"}
+                          </div>
+                          {p.path && (
+                            <p className="text-xs font-mono text-muted-foreground pl-5 break-all">{p.path}</p>
+                          )}
+                          {p.commandLine && (
+                            <p className="text-xs font-mono text-amber-700 bg-amber-50 rounded px-2 py-1 break-all">
+                              {p.commandLine}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Affected machines — shown prominently */}
                 {selected.hostStates && selected.hostStates.length > 0 && (
                   <div>
                     <p className="text-sm font-medium mb-2">Affected Machines</p>
