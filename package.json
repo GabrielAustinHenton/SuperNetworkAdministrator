@@ -7,10 +7,10 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "db:generate": "prisma generate",
-    "db:push": "prisma db push",
-    "db:migrate": "prisma migrate deploy",
-    "db:studio": "prisma studio"
+    "db:generate": "node_modules/.bin/prisma generate",
+    "db:push": "node_modules/.bin/prisma db push",
+    "db:migrate": "node_modules/.bin/prisma migrate deploy",
+    "db:studio": "node_modules/.bin/prisma studio"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^1.6.0",
